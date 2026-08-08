@@ -1,0 +1,30 @@
+---
+- name: Backup appsettings.json
+  hosts: local
+  gather_facts: true
+  become: true
+
+  tasks:
+
+    - name: Create backup directory
+      ansible.builtin.file:
+        path: /backup
+        state: directory
+
+    - name: Backup appsettings.json
+      ansible.builtin.copy:
+        src: /opt/app/config/appsettings.json
+        dest: "/backup/appsettings.json_{{ ansible_date_time.date }}"
+        remote_src: true
+
+    - name: Verify backup file exists
+      ansible.builtin.stat:
+        path: "/backup/appsettings.json_{{ ansible_date_time.date }}"
+      register: backup_status
+
+    - name: Display success message
+      ansible.builtin.debug:
+        msg: "Backup completed successfully."
+      when: backup_status.stat.exists
+
+
