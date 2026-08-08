@@ -24,7 +24,8 @@
 
     - name: Display success message
       ansible.builtin.debug:
-        msg: "Backup completed successfully."
+        msg: "Application configuration backup completed successfully."
       when: backup_status.stat.exists
+
 
 
